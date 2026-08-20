@@ -76,11 +76,45 @@ const MENU = {
   ]
 };
 
+const WA_NUMBER = "212662178749";
 const grid = document.getElementById("menuGrid");
+const cartFab = document.getElementById("cartFab");
+const cartBadge = document.getElementById("cartBadge");
+const cartOverlay = document.getElementById("cartOverlay");
+const cartDrawer = document.getElementById("cartDrawer");
+const cartItems = document.getElementById("cartItems");
+const cartTotal = document.getElementById("cartTotal");
+const cartOrder = document.getElementById("cartOrder");
+const waFloat = document.getElementById("waFloat");
+
+const ALL = {};
+for (const cat in MENU) MENU[cat].forEach(item => { ALL[cat + "|" + item.name] = { ...item }; });
+
+let CART = {};
+let currentCat = "tacos";
+
+function qtyOf(key) { return CART[key] || 0; }
+
+function addControlHtml(item, key) {
+  const q = qtyOf(key);
+  if (!q) {
+    return `<div class="menu-card-add"><button class="btn-add" data-action="add" data-key="${key}">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Ajouter
+    </button></div>`;
+  }
+  return `<div class="menu-card-add qty-stepper">
+    <button data-action="dec" data-key="${key}" aria-label="Retirer un">−</button>
+    <span class="qty-value">${q}</span>
+    <button data-action="inc" data-key="${key}" aria-label="Ajouter un">+</button>
+  </div>`;
+}
 
 function render(cat) {
+  currentCat = cat;
   grid.innerHTML = "";
   (MENU[cat] || []).forEach((item, i) => {
+    const key = cat + "|" + item.name;
     const card = document.createElement("div");
     card.className = "menu-card";
     card.style.animationDelay = (i * 40) + "ms";
@@ -92,10 +126,123 @@ function render(cat) {
       <div class="menu-card-body">
         <div class="menu-card-title"><h3>${item.name}</h3>${price}</div>
         ${desc}${badge}
+        ${addControlHtml(item, key)}
       </div>`;
     grid.appendChild(card);
   });
 }
+
+grid.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-action]");
+  if (!btn) return;
+  const { action, key } = btn.dataset;
+  if (action === "add") CART[key] = 1;
+  else if (action === "inc") CART[key] = (CART[key] || 0) + 1;
+  else if (action === "dec") {
+    CART[key] = (CART[key] || 0) - 1;
+    if (CART[key] <= 0) delete CART[key];
+  }
+  syncUI();
+});
+
+function cartCount() { return Object.values(CART).reduce((a, b) => a + b, 0); }
+
+function cartTotalPrice() {
+  let t = 0;
+  for (const key in CART) if (ALL[key].price) t += ALL[key].price * CART[key];
+  return t;
+}
+
+function waText(prefix) {
+  const lines = Object.entries(CART)
+    .map(([key, q]) => {
+      const it = ALL[key];
+      const price = it.price ? ` — ${it.price * q} DH` : " — prix sur place";
+      return `  • ${q} × ${it.name}${price}`;
+    })
+    .join("\n");
+  const total = cartTotalPrice();
+  return prefix + "\n" + lines + (total ? `\n\nTotal : ${total} DH` : "");
+}
+
+function syncUI() {
+  const count = cartCount();
+  cartBadge.textContent = count;
+
+  if (count > 0) {
+    cartFab.classList.add("visible");
+    waFloat.classList.add("with-cart");
+    waFloat.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(waText("Salam Steaka Chaimaa, je souhaite commander :"));
+  } else {
+    cartFab.classList.remove("visible");
+    waFloat.classList.remove("with-cart");
+    waFloat.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Salam Steaka Chaimaa, je souhaite passer une commande");
+  }
+
+  renderCartList();
+  render(currentCat);
+}
+
+function renderCartList() {
+  cartItems.innerHTML = "";
+  const keys = Object.keys(CART);
+  if (!keys.length) {
+    cartItems.innerHTML = '<div class="cart-empty">Votre panier est vide.<br>Ajoutez des plats pour commander.</div>';
+    cartOrder.disabled = true;
+    cartOrder.style.opacity = ".5";
+    cartTotal.textContent = "0 DH";
+    return;
+  }
+  cartOrder.disabled = false;
+  cartOrder.style.opacity = "1";
+  keys.forEach(key => {
+    const it = ALL[key];
+    const q = CART[key];
+    const row = document.createElement("div");
+    row.className = "cart-item";
+    row.innerHTML = `
+      <div>
+        <div class="cart-item-name">${it.name}</div>
+        <div class="cart-item-price">${it.price ? it.price + " DH" : "Prix sur place"}</div>
+        <div class="cart-item-row">
+          <div class="qty-stepper">
+            <button data-action="dec" data-key="${key}" aria-label="Retirer un">−</button>
+            <span class="qty-value">${q}</span>
+            <button data-action="inc" data-key="${key}" aria-label="Ajouter un">+</button>
+          </div>
+          <button class="cart-remove" data-action="remove" data-key="${key}">Retirer</button>
+        </div>
+      </div>
+      <div style="font-weight:700;align-self:start">${it.price ? it.price * q + " DH" : "—"}</div>`;
+    cartItems.appendChild(row);
+  });
+  cartTotal.textContent = cartTotalPrice() + " DH";
+}
+
+cartItems.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-action]");
+  if (!btn) return;
+  const { action, key } = btn.dataset;
+  if (action === "inc") CART[key] = (CART[key] || 0) + 1;
+  else if (action === "dec") {
+    CART[key] = (CART[key] || 0) - 1;
+    if (CART[key] <= 0) delete CART[key];
+  } else if (action === "remove") delete CART[key];
+  syncUI();
+});
+
+cartOrder.addEventListener("click", () => {
+  if (!cartCount()) return;
+  const text = waText("Salam Steaka Chaimaa, je souhaite commander :");
+  window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+});
+
+cartFab.addEventListener("click", () => openCart());
+document.getElementById("cartClose").addEventListener("click", closeCart);
+cartOverlay.addEventListener("click", closeCart);
+
+function openCart() { cartDrawer.classList.add("open"); cartOverlay.classList.add("open"); }
+function closeCart() { cartDrawer.classList.remove("open"); cartOverlay.classList.remove("open"); }
 
 document.getElementById("tabs").addEventListener("click", (e) => {
   const tab = e.target.closest(".tab");
@@ -106,6 +253,7 @@ document.getElementById("tabs").addEventListener("click", (e) => {
 });
 
 render("tacos");
+syncUI();
 
 const header = document.getElementById("header");
 window.addEventListener("scroll", () => {
