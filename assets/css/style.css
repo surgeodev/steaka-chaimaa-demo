@@ -105,6 +105,19 @@ a { text-decoration: none; color: inherit; }
 .hero p { color: var(--muted); font-size: clamp(15px, 2vw, 19px); }
 .hero .hero-loc { margin-top: 8px; font-size: 14px; color: var(--gold); font-weight: 500; }
 .hero-cta { margin-top: 34px; display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+.hero-minis { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-mini {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 999px;
+  padding: 7px 16px 7px 7px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.28);
+}
+.hero-mini img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(249,115,22,.35); }
+.hero-mini span { line-height: 1.25; }
+.hero-mini b { display: block; font-size: 13px; font-weight: 600; }
+.hero-mini em { font-style: normal; color: var(--orange); font-weight: 700; font-size: 12.5px; }
 .hero-photo { position: relative; }
 .hero-photo img {
   width: 100%; height: auto;
@@ -131,6 +144,20 @@ a { text-decoration: none; color: inherit; }
   padding: 6px 14px;
   border-radius: 999px;
   box-shadow: 0 6px 18px rgba(249,115,22,.45);
+  z-index: 2;
+}
+.hero-photo-chip {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  background: rgba(13,10,7,.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.14);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
   z-index: 2;
 }
 
