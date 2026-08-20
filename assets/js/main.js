@@ -167,6 +167,12 @@ function waText(prefix) {
 
 function syncUI() {
   const count = cartCount();
+  if (count > cartBadge.dataset.last) {
+    cartBadge.classList.remove("pulse");
+    void cartBadge.offsetWidth;
+    cartBadge.classList.add("pulse");
+  }
+  cartBadge.dataset.last = count;
   cartBadge.textContent = count;
 
   if (count > 0) {
