@@ -399,6 +399,9 @@ a { text-decoration: none; color: inherit; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
+  .hero { min-height: auto; }
+  .hero-bg { background-size: 100% auto; background-position: top center; background-repeat: no-repeat; }
+  .hero-content { padding: 116px 20px 56px; }
   .nav {
     position: fixed;
     top: 0; right: 0; bottom: 0;
