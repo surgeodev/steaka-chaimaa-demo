@@ -151,7 +151,7 @@ a { text-decoration: none; color: inherit; }
 /* ---------- Menu grid ---------- */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 26px;
 }
 .menu-card {
@@ -163,7 +163,7 @@ a { text-decoration: none; color: inherit; }
   animation: fadeUp .4s ease both;
 }
 .menu-card:hover { transform: translateY(-5px); border-color: rgba(249,115,22,.45); box-shadow: 0 14px 30px rgba(0,0,0,.35); }
-.menu-card-img { aspect-ratio: 4 / 3; overflow: hidden; background: #1a1410; }
+.menu-card-img { aspect-ratio: 3 / 2; overflow: hidden; background: #1a1410; }
 .menu-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
 .menu-card:hover .menu-card-img img { transform: scale(1.06); }
 .menu-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
@@ -357,13 +357,15 @@ a { text-decoration: none; color: inherit; }
 .cart-empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 15px; }
 .cart-item {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: start;
   background: var(--card);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: var(--radius);
-  padding: 12px 14px;
+  padding: 10px;
 }
+.cart-item-thumb { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; }
 .cart-item-name { font-size: 14.5px; font-weight: 600; }
 .cart-item-price { font-size: 14px; color: var(--orange); font-weight: 600; margin-top: 2px; }
 .cart-item-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }

@@ -201,6 +201,7 @@ function renderCartList() {
     const row = document.createElement("div");
     row.className = "cart-item";
     row.innerHTML = `
+      <img class="cart-item-thumb" src="assets/img/${it.img}" alt="${it.name}" loading="lazy">
       <div>
         <div class="cart-item-name">${it.name}</div>
         <div class="cart-item-price">${it.price ? it.price + " DH" : "Prix sur place"}</div>
