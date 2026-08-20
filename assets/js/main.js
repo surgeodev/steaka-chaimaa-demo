@@ -9,7 +9,7 @@ const MENU = {
   ],
   sandwichs: [
     { name: "Chika", price: 45, img: "menu/chika.webp" },
-    { name: "Tornade Viande Hachée", price: 45, img: "menu/tacoscordonbleu.webp" },
+    { name: "Tornade Viande Hachée", price: 45, img: "menu/tornadeviandehachee.webp" },
     { name: "Cordon Bleu", price: 45, img: "menu/sandiwchcordeubleu.webp" },
     { name: "Cury", price: 45, img: "menu/sandwichcury.webp" },
     { name: "Tortillas Mixte", price: 45, img: "menu/sandwichtortilla.webp" },
