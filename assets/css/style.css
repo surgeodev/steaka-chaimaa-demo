@@ -46,9 +46,22 @@ a { text-decoration: none; color: inherit; }
 .btn-block { width: 100%; justify-content: center; }
 
 /* ---------- Header ---------- */
-.header {
+.demo-strip {
   position: fixed;
   top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: #0d0a07;
+  color: var(--gold);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  text-align: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(249,115,22,.35);
+}
+.header {
+  position: fixed;
+  top: 26px; left: 0; right: 0;
   z-index: 100;
   padding: 18px 0;
   transition: background .3s, padding .3s, box-shadow .3s;
